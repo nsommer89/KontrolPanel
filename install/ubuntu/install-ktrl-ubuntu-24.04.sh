@@ -205,5 +205,7 @@ VITE_APP_NAME="\${APP_NAME}"
 EOF
 
 cd $INSTALL_DIR/web
+
+/usr/local/bin/composer install --no-dev
 /usr/bin/php artisan key:generate
 /usr/bin/php artisan migrate:fresh --seed
