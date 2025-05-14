@@ -10,8 +10,8 @@ set -e
 export TZ=Europe/Copenhagen
 
 # GitHub source
-REPO_BASE_URL="https://raw.githubusercontent.com/nsommer89/KontrolPanel/master/install"
-TMP_DIR="/tmp/kontrolpanel-install"
+export REPO_BASE_URL="https://raw.githubusercontent.com/nsommer89/KontrolPanel/master/install"
+export TMP_DIR="/tmp/kontrolpanel-install"
 mkdir -p "$TMP_DIR"
 cd "$TMP_DIR"
 

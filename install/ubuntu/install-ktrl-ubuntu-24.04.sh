@@ -6,7 +6,7 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-source "./config.sh"
+source "$TMP_DIR/config.sh"
 
 # Install software-properties-common to be able to use add-apt-repository
 echo "📦 Installing tools and PPA..."
