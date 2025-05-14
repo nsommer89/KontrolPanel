@@ -93,6 +93,47 @@ chown -R www-data:www-data $INSTALL_DIR
 ln -s $INSTALL_DIR/bin/console /usr/local/bin/ktrl && chmod a+rx /usr/local/bin/ktrl
 git config --global --add safe.directory $INSTALL_DIR
 
+# Adding KontrolPanel nginx and php-fpm configs
+rm /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+unlink /etc/nginx/sites-enabled/default
+cp $INSTALL_DIR/install/ubuntu/php-fpm/ktrl.www.conf /etc/php/$PHP_VERSION/fpm/pool.d/ktrl.www.conf
+cp $INSTALL_DIR/install/ubuntu/nginx/ktrl.conf /etc/nginx/conf.d/ktrl.conf
+
+# Cleanup
+echo "🧹 Clean up...";
+apt autoremove
+rm -f /var/www/html/index.html /var/www/html/index.nginx-debian.html
+rmdir --ignore-fail-on-non-empty /var/www/html 2>/dev/null
+
+# Start MySQL and nginx
+echo "📦 Starting and enabling services..."
+service mysql start && service nginx start && service php$PHP_VERSION-fpm start
+
+# Set the desired php version as default
+echo "🌎 Setting default PHP version to $PHP_VERSION"
+update-alternatives --set php /usr/bin/php$PHP_VERSION
+update-alternatives --set phar /usr/bin/phar$PHP_VERSION
+update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
+
+# Set MySQL root password
+echo "🔐 Configuring MySQL..."
+mysql -u root <<-EOF
+UPDATE mysql.user SET Password=PASSWORD('$KTRL_PASS') WHERE User='root';
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DELETE FROM mysql.user WHERE User='';
+DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
+FLUSH PRIVILEGES;
+EOF
+
+# Make database user for vhost-manager
+mysql -e "CREATE DATABASE ktrl_admin_db;"
+# We need to save password in a variable to use it to connect application to database
+mysql -e "CREATE USER 'admin'@'localhost' IDENTIFIED WITH mysql_native_password BY '$KTRL_PASS';"
+mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON ktrl_admin_db.* TO 'admin'@'localhost';"
+# Grant this user admin the FILE global privilege: (if enabled, reports will be archived faster thanks to the LOAD DATA INFILE feature)
+mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
+
+
 # Create webpanel laravel env file
 rm -f $INSTALL_DIR/web/.env
 cat > $INSTALL_DIR/web/.env <<EOF
@@ -162,43 +203,3 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="${APP_NAME}"
 EOF 
-
-# Adding KontrolPanel nginx and php-fpm configs
-rm /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-unlink /etc/nginx/sites-enabled/default
-cp $INSTALL_DIR/install/ubuntu/php-fpm/ktrl.www.conf /etc/php/$PHP_VERSION/fpm/pool.d/ktrl.www.conf
-cp $INSTALL_DIR/install/ubuntu/nginx/ktrl.conf /etc/nginx/conf.d/ktrl.conf
-
-# Cleanup
-echo "🧹 Clean up...";
-apt autoremove
-rm -f /var/www/html/index.html /var/www/html/index.nginx-debian.html
-rmdir --ignore-fail-on-non-empty /var/www/html 2>/dev/null
-
-# Start MySQL and nginx
-echo "📦 Starting and enabling services..."
-service mysql start && service nginx start && service php$PHP_VERSION-fpm start
-
-# Set the desired php version as default
-echo "🌎 Setting default PHP version to $PHP_VERSION"
-update-alternatives --set php /usr/bin/php$PHP_VERSION
-update-alternatives --set phar /usr/bin/phar$PHP_VERSION
-update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
-
-# Set MySQL root password
-echo "🔐 Configuring MySQL..."
-mysql -u root <<-EOF
-UPDATE mysql.user SET Password=PASSWORD('$KTRL_PASS') WHERE User='root';
-DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-DELETE FROM mysql.user WHERE User='';
-DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
-FLUSH PRIVILEGES;
-EOF
-
-# Make database user for vhost-manager
-mysql -e "CREATE DATABASE ktrl_admin_db;"
-# We need to save password in a variable to use it to connect application to database
-mysql -e "CREATE USER 'admin'@'localhost' IDENTIFIED WITH mysql_native_password BY '$KTRL_PASS';"
-mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON ktrl_admin_db.* TO 'admin'@'localhost';"
-# Grant this user admin the FILE global privilege: (if enabled, reports will be archived faster thanks to the LOAD DATA INFILE feature)
-mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
