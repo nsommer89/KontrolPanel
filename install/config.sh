@@ -8,7 +8,7 @@
 KTRL_VERSION="1.0.0"
 
 # Stack versions
-PHP_VERSION="8.3"
+PHP_VERSION="8.4"
 
 # File paths
 INSTALL_DIR="/opt/kontrolpanel"

@@ -134,6 +134,7 @@ mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, DROP, ALTER, CREA
 mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
 
 
+# TODO: Make it generate a new APP_KEY
 # Create webpanel laravel env file
 rm -f $INSTALL_DIR/web/.env
 cat > $INSTALL_DIR/web/.env <<EOF
@@ -141,14 +142,13 @@ APP_NAME=KontrolPanel
 APP_ENV=local
 APP_KEY=base64:wRDzhdIZjg8lUKxYzG6EoJ8RBunIWSeoqgukK0znnA0=
 APP_DEBUG=true
-APP_URL=http://localhost
+APP_URL=http://localhost:$KTRL_PORT
 
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
 APP_FAKER_LOCALE=en_US
 
 APP_MAINTENANCE_DRIVER=file
-# APP_MAINTENANCE_STORE=database
 
 PHP_CLI_SERVER_WORKERS=4
 
