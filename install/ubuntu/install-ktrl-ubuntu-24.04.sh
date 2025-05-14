@@ -97,6 +97,8 @@ chown -R www-data:www-data $INSTALL_DIR
 rm /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 cp $INSTALL_DIR/install/ubuntu/php-fpm/ktrl.www.conf /etc/php/$PHP_VERSION/fpm/pool.d/ktrl.www.conf
 cp $INSTALL_DIR/install/ubuntu/nginx/ktrl.conf /etc/nginx/conf.d/ktrl.conf
+rm /var/www/html/index.html && rm /var/www/html/index.nginx-debian.html
+echo "Nothing to see here" >> /var/www/html/index.html
 
 # Start MySQL and nginx
 echo "📦 Starting and enabling services..."
