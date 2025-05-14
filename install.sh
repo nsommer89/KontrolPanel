@@ -14,6 +14,12 @@ if [[ "$(hostname)" == "nikolaj-ubuntu-7971" || "$USER" == "niko" ]]; then
     exit 1
 fi
 
+# ========== Check if KontrolPanel is already installed ==========
+if [ -f "/etc/kontrolpanel.installed" ]; then
+    echo "⚠️ KontrolPanel is already installed (flag detected)."
+    exit 1
+fi
+
 # Timezone
 export TZ=Europe/Copenhagen
 
@@ -117,6 +123,9 @@ curl -fsSL "$REPO_BASE_URL/$INSTALL_SCRIPT" -o install-ktrl.sh
 chmod +x install-ktrl.sh
 bash ./install-ktrl.sh
 
+# Mark as installed
+touch /etc/kontrolpanel.installed
+
 # Final message
 #clear
 echo ""
@@ -136,3 +145,5 @@ echo ""
 
 # Clear password var
 unset KTRL_PASS
+
+exit 0

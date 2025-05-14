@@ -1,4 +1,4 @@
 #!/usr/bin/env php8.3
 <?php
 // TODO: Fix static PHP version ^
-echo "ktrl command works 🎉";
+echo "ktrl command works 🎉" . PHP_EOL;
