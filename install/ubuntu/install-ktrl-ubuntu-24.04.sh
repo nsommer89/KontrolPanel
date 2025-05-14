@@ -137,7 +137,7 @@ mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
 # TODO: Make it generate a new APP_KEY
 # Create webpanel laravel env file
 rm -f $INSTALL_DIR/web/.env
-cat > $INSTALL_DIR/web/.env <<EOF
+cat > "$INSTALL_DIR/web/.env" <<EOF
 APP_NAME=KontrolPanel
 APP_ENV=local
 APP_KEY=
@@ -202,7 +202,7 @@ AWS_BUCKET=
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="\${APP_NAME}"
-EOF 
+EOF
 
 cd $INSTALL_DIR/web
 /usr/bin/php artisan key:generate

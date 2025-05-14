@@ -32,7 +32,9 @@ It is built on **Laravel + Filament**, and currently supports **Ubuntu** and **D
 > ⚠️ It is **highly recommended** to run KontrolPanel on a fresh server, as the installer will modify system packages and services.
 > Alternatively, you can try it inside a Docker container:
 
-`docker run -p 80:80 -p 443:443 -p 22:22 -p 8200:8200 -a stdin -a stdout -i -t ubuntu:24.04 /bin/bash`
+```bash
+docker run -p 80:80 -p 443:443 -p 22:22 -p 8200:8200 -a stdin -a stdout -i -t ubuntu:24.04 /bin/bash
+```
 
 ### 🔹 Step 1: Prepare the system (required for Debian/Ubuntu)
 
