@@ -31,10 +31,14 @@ cd "$TMP_DIR"
 
 # Parse flags
 AUTO_CONFIRM=0
+CERTBOT_EMAIL=""
 for arg in "$@"; do
     case "$arg" in
         -y|--yes)
             AUTO_CONFIRM=1
+            ;;
+        --email=*)
+            CERTBOT_EMAIL="${arg#*=}"
             ;;
     esac
 done
@@ -75,17 +79,22 @@ else
     echo ""
 fi
 
-# Certbot email prompt
-while true; do
-    read -p "📧 Enter email for Certbot (Let's Encrypt): " CERTBOT_EMAIL
-    if [[ "$CERTBOT_EMAIL" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]; then
-        export CERTBOT_EMAIL
-        echo "✅ Email accepted: $CERTBOT_EMAIL"
-        break
-    else
-        echo "❌ Invalid email. Please try again."
-    fi
-done
+# Certbot email prompt (if not passed as argument)
+if [[ -z "$CERTBOT_EMAIL" ]]; then
+    while true; do
+        read -p "📧 Enter email for Certbot (Let's Encrypt): " CERTBOT_EMAIL
+        if [[ "$CERTBOT_EMAIL" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]; then
+            echo "✅ Email accepted: $CERTBOT_EMAIL"
+            break
+        else
+            echo "❌ Invalid email. Please try again."
+        fi
+    done
+else
+    echo "📧 Using email from argument: $CERTBOT_EMAIL"
+fi
+
+export CERTBOT_EMAIL
 
 # Detect OS
 . /etc/os-release
