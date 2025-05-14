@@ -85,10 +85,14 @@ echo "📦 Installing composer"
 export COMPOSER_ALLOW_SUPERUSER=1
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Install KTRL web interface and also get more config files to add
+mkdir -p $INSTALL_DIR && cd $INSTALL_DIR && git clone $KTRL_GIT_REPO .
+chown -R www-data:www-data $INSTALL_DIR
+
 # Adding KontrolPanel nginx and php-fpm configs
 rm /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-cp "$(dirname "$0")/php-fpm/ktrl.www.conf" /etc/php/$PHP_VERSION/fpm/pool.d/ktrl.www.conf
-cp "$(dirname "$0")/nginx/ktrl.conf" /etc/nginx/conf.d/ktrl.conf
+cp $INSTALL_DIR/install/ubuntu/php-fpm/ktrl.www.conf /etc/php/$PHP_VERSION/fpm/pool.d/ktrl.www.conf
+cp $INSTALL_DIR/install/ubuntu/nginx/ktrl.conf /etc/nginx/conf.d/ktrl.conf
 
 # Start MySQL and nginx
 echo "📦 Starting and enabling services..."
