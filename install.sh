@@ -32,6 +32,7 @@ cd "$TMP_DIR"
 # Parse flags
 AUTO_CONFIRM=0
 CERTBOT_EMAIL=""
+FQDN=""
 for arg in "$@"; do
     case "$arg" in
         -y|--yes)
@@ -39,6 +40,9 @@ for arg in "$@"; do
             ;;
         --email=*)
             CERTBOT_EMAIL="${arg#*=}"
+            ;;
+        --fqdn=*)
+            export FQDN="${arg#*=}"
             ;;
     esac
 done

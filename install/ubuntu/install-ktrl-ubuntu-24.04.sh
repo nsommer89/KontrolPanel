@@ -142,7 +142,7 @@ APP_NAME=KontrolPanel
 APP_ENV=local
 APP_KEY=
 APP_DEBUG=true
-APP_URL=http://localhost:$KTRL_PORT
+APP_URL=http://$FQDN:$KTRL_PORT
 
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
