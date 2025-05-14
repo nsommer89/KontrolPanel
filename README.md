@@ -1,4 +1,4 @@
-# 🚀 KontrolPanel
+# 🚀 KontrolPanel (WIP)
 
 **KontrolPanel** is a lightweight, modern web-based control panel for managing web hosting environments on Linux systems.
 
