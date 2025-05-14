@@ -107,7 +107,7 @@ rmdir --ignore-fail-on-non-empty /var/www/html 2>/dev/null
 
 # Start MySQL and nginx
 echo "📦 Starting and enabling services..."
-service mysql start && service nginx start
+service mysql start && service nginx start && service php$PHP_VERSION-fpm start
 
 # Set the desired php version as default
 echo "🌎 Setting default PHP version to $PHP_VERSION"
