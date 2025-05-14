@@ -66,6 +66,9 @@ apt-get install -y \
     mysql-server \
     ufw
 
+echo "🧹 Clean up...";
+apt autoremove
+
 echo "📦 Updating ca-certificates"
 # Update ca-certificates
 update-ca-certificates
