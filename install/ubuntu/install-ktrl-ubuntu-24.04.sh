@@ -43,7 +43,7 @@ for ext in "${PHP_EXTENSIONS[@]}"; do
 done
 
 # Install all packages
-echo "📦 Installing PHP"
+echo "📦 Installing PHP and required extensions..."
 apt-get install -y php${PHP_VERSION} "${PACKAGES[@]}"
 
 echo "📦 Installing base packages..."
@@ -66,11 +66,7 @@ apt-get install -y \
     mysql-server \
     ufw
 
-echo "🧹 Clean up...";
-apt autoremove
-
-echo "📦 Updating ca-certificates"
-# Update ca-certificates
+echo "📃 Update ca-certificates"
 update-ca-certificates
     
 echo "📦 Configuring firewall..."
@@ -80,37 +76,47 @@ if [ "$enableUFW" != "${enableUFW#[Yy]}" ] ;then
     ufw allow $KTRL_PORT
 fi
 
+# TODO: Notify the user that they need to agree to Certbot terms of service
+# Register certbot email and agree tos
 echo "📦 Registering Certbot..."
 certbot register --non-interactive --agree-tos -m $CERTBOT_EMAIL
 
-echo "📦 Installing composer"
 # Install Composer
+echo "📦 Installing composer..."
 export COMPOSER_ALLOW_SUPERUSER=1
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-echo "📦 Installing KontrolPanel into $INSTALL_DIR"
 # Install KTRL web interface and also get more config files to add
+echo "📦 Installing KontrolPanel into $INSTALL_DIR..."
 mkdir -p $INSTALL_DIR && cd $INSTALL_DIR && git clone $KTRL_GIT_REPO .
 chown -R www-data:www-data $INSTALL_DIR
+ln -s $INSTALL_DIR/bin/console /usr/local/bin/ktrl && chmod a+rx /usr/local/bin/ktrl
+git config --global --add safe.directory $INSTALL_DIR
 
 # Adding KontrolPanel nginx and php-fpm configs
 rm /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+unlink /etc/nginx/sites-enabled/default
 cp $INSTALL_DIR/install/ubuntu/php-fpm/ktrl.www.conf /etc/php/$PHP_VERSION/fpm/pool.d/ktrl.www.conf
 cp $INSTALL_DIR/install/ubuntu/nginx/ktrl.conf /etc/nginx/conf.d/ktrl.conf
-rm /var/www/html/index.html && rm /var/www/html/index.nginx-debian.html
-echo "Nothing to see here" >> /var/www/html/index.html
+
+# Cleanup
+echo "🧹 Clean up...";
+apt autoremove
+rm -f /var/www/html/index.html /var/www/html/index.nginx-debian.html
+rmdir --ignore-fail-on-non-empty /var/www/html 2>/dev/null
 
 # Start MySQL and nginx
 echo "📦 Starting and enabling services..."
 service mysql start && service nginx start
 
 # Set the desired php version as default
+echo "🌎 Setting default PHP version to $PHP_VERSION"
 update-alternatives --set php /usr/bin/php$PHP_VERSION
 update-alternatives --set phar /usr/bin/phar$PHP_VERSION
 update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
 
-echo "🔐 Securing MySQL and creating initial user/database..."
 # Set MySQL root password
+echo "🔐 Configuring MySQL..."
 mysql -u root <<-EOF
 UPDATE mysql.user SET Password=PASSWORD('$KTRL_PASS') WHERE User='root';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');

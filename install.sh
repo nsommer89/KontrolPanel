@@ -6,6 +6,14 @@ set -e
 # KontrolPanel Installation (Remote Bootstrap)
 # =========================
 
+# TODO: Remove the code below - just to ensure that i don't by failure do run it on my own machine 💀
+# ========== SAFETY CHECK: Avoid running on dev machine ==========
+if [[ "$(hostname)" == "nikolaj-ubuntu-7971" || "$USER" == "niko" ]]; then
+    echo "❌ This installer is blocked from running on your host machine (hostname: $HOSTNAME, user: $USER)."
+    echo "🛑 Aborting to prevent accidental system modification."
+    exit 1
+fi
+
 # Timezone
 export TZ=Europe/Copenhagen
 
