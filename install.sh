@@ -33,7 +33,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Download and source config
-curl -O "$REPO_BASE_URL/config.sh" config.sh
+curl -O "$REPO_BASE_URL/config.sh"
 source ./config.sh
 
 # Generate default admin password
@@ -105,7 +105,7 @@ esac
 
 # Download and run installer
 echo "📥 Downloading installer: $INSTALL_SCRIPT"
-curl -O "$REPO_BASE_URL/$INSTALL_SCRIPT" install-ktrl.sh
+curl -fsSL "$REPO_BASE_URL/$INSTALL_SCRIPT" -o install-ktrl.sh
 chmod +x install-ktrl.sh
 bash ./install-ktrl.sh
 
