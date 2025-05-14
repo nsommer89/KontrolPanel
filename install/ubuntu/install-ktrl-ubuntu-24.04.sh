@@ -140,7 +140,7 @@ rm -f $INSTALL_DIR/web/.env
 cat > $INSTALL_DIR/web/.env <<EOF
 APP_NAME=KontrolPanel
 APP_ENV=local
-APP_KEY=base64:wRDzhdIZjg8lUKxYzG6EoJ8RBunIWSeoqgukK0znnA0=
+APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:$KTRL_PORT
 
@@ -193,7 +193,7 @@ MAIL_PORT=2525
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_FROM_ADDRESS="hello@example.com"
-MAIL_FROM_NAME="${APP_NAME}"
+MAIL_FROM_NAME="\${APP_NAME}"
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
@@ -201,5 +201,9 @@ AWS_DEFAULT_REGION=us-east-1
 AWS_BUCKET=
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
-VITE_APP_NAME="${APP_NAME}"
+VITE_APP_NAME="\${APP_NAME}"
 EOF 
+
+cd $INSTALL_DIR/web
+/usr/bin/php artisan key:generate
+/usr/bin/php artisan migrate:fresh --seed
