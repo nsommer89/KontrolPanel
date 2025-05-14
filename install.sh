@@ -55,7 +55,7 @@ curl -O "$REPO_BASE_URL/config.sh"
 source ./config.sh
 
 # Generate default admin password
-export KTRL_PASS=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c16)
+export KTRL_PASS=$(< /dev/urandom tr -dc 'A-Za-z0-9' | head -c24)
 
 # Intro
 echo ""
