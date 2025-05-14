@@ -88,6 +88,7 @@ echo "📦 Installing composer"
 export COMPOSER_ALLOW_SUPERUSER=1
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+echo "📦 Installing KontrolPanel into $INSTALL_DIR"
 # Install KTRL web interface and also get more config files to add
 mkdir -p $INSTALL_DIR && cd $INSTALL_DIR && git clone $KTRL_GIT_REPO .
 chown -R www-data:www-data $INSTALL_DIR

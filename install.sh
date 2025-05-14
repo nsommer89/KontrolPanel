@@ -110,7 +110,7 @@ chmod +x install-ktrl.sh
 bash ./install-ktrl.sh
 
 # Final message
-clear
+#clear
 echo ""
 echo "=============================================="
 echo "✅ KontrolPanel v$KTRL_VERSION installed successfully"
