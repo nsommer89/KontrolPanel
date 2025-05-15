@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\CustomLogin;
 use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Models\Team;
@@ -32,7 +33,7 @@ class KtrlPanelProvider extends PanelProvider
             ->brandLogoHeight('4rem')
             ->topNavigation()
             ->path('/')
-            ->login()
+            ->login(CustomLogin::class)
             ->tenantRegistration(RegisterTeam::class)
             ->tenantProfile(EditTeamProfile::class)
             ->profile()

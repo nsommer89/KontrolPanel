@@ -205,7 +205,8 @@ VITE_APP_NAME="\${APP_NAME}"
 EOF
 
 cd $INSTALL_DIR/web
-
 /usr/local/bin/composer install
+chown -R www-data:www-data .
 /usr/bin/php artisan key:generate
-/usr/bin/php artisan migrate:fresh --seed
+/usr/bin/php artisan migrate:fresh
+/usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT"
