@@ -69,7 +69,9 @@ class SetupPanelCommand extends Command
                 'fqdn' => $fqdn,
                 'port' => $port,
             ]);
-            
+
+            $this->info("KontrolPanel settings was created successfully.");
+
         } catch (Throwable $e) {
             $this->info($e->getMessage());
             Log::info($e->getMessage(), ($e->getTrace()));

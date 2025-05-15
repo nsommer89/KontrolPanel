@@ -129,7 +129,7 @@ EOF
 mysql -e "CREATE DATABASE ktrl_admin_db;"
 # We need to save password in a variable to use it to connect application to database
 mysql -e "CREATE USER 'admin'@'localhost' IDENTIFIED WITH mysql_native_password BY '$KTRL_PASS';"
-mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON ktrl_admin_db.* TO 'admin'@'localhost';"
+mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, REFERENCES, INDEX, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON ktrl_admin_db.* TO 'admin'@'localhost';"
 # Grant this user admin the FILE global privilege: (if enabled, reports will be archived faster thanks to the LOAD DATA INFILE feature)
 mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
 
