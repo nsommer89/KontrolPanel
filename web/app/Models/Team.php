@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use function Illuminate\Events\queueable;
 
@@ -38,6 +39,16 @@ class Team extends Model
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'team_user', 'team_id', 'user_id');
+    }
+
+    public function webhotels(): HasMany
+    {
+        return $this->hasMany(User::class, 'team_id', 'id');
+    }
+
+    public function domains(): HasMany
+    {
+        return $this->hasMany(User::class, 'team_id', 'id');
     }
 
     protected static function boot()

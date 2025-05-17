@@ -25,9 +25,12 @@ class RegisterTeam extends RegisterTenant
 
     protected function handleRegistration(array $data): Team
     {
-        $team = Team::create($data);
+        $user = auth()->user();
+        $team = Team::create(array_merge([
+            'owner_id' => $user->id
+        ], $data));
 
-        $team->members()->attach(auth()->user());
+        $team->members()->attach($user);
 
         return $team;
     }

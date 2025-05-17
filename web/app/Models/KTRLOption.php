@@ -21,5 +21,6 @@ class KTRLOption extends Model
     protected $fillable = [
         'fqdn',
         'port',
+        'ktrl_version',
     ];
 }

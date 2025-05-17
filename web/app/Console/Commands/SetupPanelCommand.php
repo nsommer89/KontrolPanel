@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\KTRLOption;
+use App\Models\PhpVersion;
 use App\Models\Team;
 use App\Models\User;
 use Exception;
@@ -19,7 +20,7 @@ class SetupPanelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'panel:setup {email} {user} {pass} {fqdn} {port}';
+    protected $signature = 'panel:setup {email} {user} {pass} {fqdn} {port} {ktrl_version} {php_version}';
 
     /**
      * The console command description.
@@ -39,15 +40,8 @@ class SetupPanelCommand extends Command
             $email = $this->argument('email');
             $fqdn = $this->argument('fqdn');
             $port = $this->argument('port');
-
-            /* Check if the username does already exists */
-            if (User::where('username', $user)->first()) {
-                throw new Exception('The KontrolPanel admin username does already exists.');
-            }
-            /* Check if the email does already exists */
-            if (User::where('email', $user)->first()) {
-                throw new Exception('The KontrolPanel admin email does already exists.');
-            }
+            $ktrl_version = $this->argument('ktrl_version');
+            $php_version = $this->argument('php_version');
 
             $user = User::create([
                 'name' => 'KTRL Admin',
@@ -68,6 +62,17 @@ class SetupPanelCommand extends Command
             $options = KTRLOption::create([
                 'fqdn' => $fqdn,
                 'port' => $port,
+                'ktrl_version' => $ktrl_version,
+            ]);
+
+
+            // Create the currently installed PHP version
+            PhpVersion::create([
+                'version' => $php_version,
+                'installed' => true,
+                'default' => true,
+                'binary_path' => '',
+                'fpm_path' => '',
             ]);
 
             $this->info("KontrolPanel settings was created successfully.");

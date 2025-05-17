@@ -209,4 +209,4 @@ cd $INSTALL_DIR/web
 chown -R www-data:www-data .
 /usr/bin/php artisan key:generate
 /usr/bin/php artisan migrate:fresh
-/usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT"
+/usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT" "$KTRL_VERSION" "$PHP_VERSION"

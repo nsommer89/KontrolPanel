@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Auth\CustomLogin;
 use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Pages\Tenancy\RegisterTeam;
+use App\Filament\Widgets\KontrolPanelInfoWidget;
 use App\Models\Team;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -21,22 +22,27 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Navigation\NavigationGroup;
+use Filament\FontProviders\GoogleFontProvider;
 
 class KtrlPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->font('Ubuntu', provider: GoogleFontProvider::class)
             ->default()
             ->id('ktrl')
             ->brandLogo(asset('static/ktrl_logo_xl.png'))
             ->brandLogoHeight('4rem')
-            ->topNavigation()
+            // ->topNavigation()
+            ->sidebarCollapsibleOnDesktop()
             ->path('/')
             ->login(CustomLogin::class)
             ->tenantRegistration(RegisterTeam::class)
             ->tenantProfile(EditTeamProfile::class)
             ->profile()
+            ->breadcrumbs(false)
             ->colors([
                 'primary' => '#1A2C43',   // navy blue from logo
                 'gray'    => '#374151',   // text-appropriate gray
@@ -46,6 +52,15 @@ class KtrlPanelProvider extends PanelProvider
                 'danger'  => '#EF4444',   // red-500
             ])
             ->tenant(Team::class)
+            ->navigationGroups([
+                NavigationGroup::make('Webhosting')
+                    ->label(fn(): string => __('Webhosting'))
+                    ->collapsible(false),
+                NavigationGroup::make('System')
+                    ->label(fn(): string => __('System'))
+                    ->collapsible(false)
+                    ->collapsed(),
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -55,6 +70,7 @@ class KtrlPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                KontrolPanelInfoWidget::class
             ])
             ->middleware([
                 EncryptCookies::class,

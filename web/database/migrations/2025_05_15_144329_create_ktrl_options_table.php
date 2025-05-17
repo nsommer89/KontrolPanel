@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('ktrl_options', function (Blueprint $table) {
             $table->id();
             $table->string('fqdn');
-            $table->string('port');
+            $table->integer('port');
+            $table->string('ktrl_version');
             $table->timestamps();
         });
     }
