@@ -177,10 +177,8 @@ if ! grep -q "Include /etc/proftpd/sql.conf" /etc/proftpd/proftpd.conf; then
     echo "Include /etc/proftpd/sql.conf" >> /etc/proftpd/proftpd.conf
 fi
 
-echo "🔁 Restarting ProFTPd..."
-systemctl restart proftpd
-
-echo "✅ ProFTPd with MySQL authentication installed successfully."
+echo "🔁 Starting ProFTPd..."
+service proftpd start
 
 # TODO: Make it generate a new APP_KEY
 # Create webpanel laravel env file
