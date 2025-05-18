@@ -40,6 +40,7 @@ class PhpVersionResource extends Resource
                         Forms\Components\TextInput::make('version')
                             ->mask('9.99')
                             ->placeholder('8.x')
+                            ->columnSpan(1)
                             ->disabled(function ($record) {
                                 return !empty($record);
                             })
@@ -50,26 +51,31 @@ class PhpVersionResource extends Resource
                             ->helperText(__('This can\'t be changed. The PHP version can only be uninstalled.'))
                             ->required()
                             ->maxLength(255),
-                    ]),
+                    ])->columns(3),
                 Section::make(__('Advanced'))
                     ->schema([
                         Forms\Components\Toggle::make('default')
-                            ->columnSpan(3)
+                            ->columnSpan(2)
                             ->helperText(__('If this is checked, /usr/bin/php will be symlinked to this version.'))
                             ->required(),
                         Forms\Components\Toggle::make('change_php_paths')->label('Change PHP paths')->translateLabel()
-                        ->helperText('Check this, if you want to modify the PHP paths.'),
+                            ->columnSpan(2)
+                            ->helperText('Check this, if you want to modify the PHP paths.')
+                            ->live(),
                         Forms\Components\TextInput::make('binary_path')
+                            ->hint('Expected to point to something like /usr/bin/php8.x')
                             ->disabled(function (Get $get) {
                                 return !$get('change_php_paths');
                             })
                             ->maxLength(255),
                         Forms\Components\TextInput::make('fpm_path')
+                            ->hint('Expected to point to something like /etc/php/8.x/fpm')
+                            ->rules(['nullable', 'string', 'starts_with:/etc/'])
                             ->disabled(function (Get $get) {
                                 return !$get('change_php_paths');
                             })
                             ->maxLength(255),
-                    ])->columns(3),
+                    ])->columns(2),
             ]);
     }
 

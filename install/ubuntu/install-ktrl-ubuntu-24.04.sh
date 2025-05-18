@@ -115,6 +115,14 @@ update-alternatives --set php /usr/bin/php$PHP_VERSION
 update-alternatives --set phar /usr/bin/phar$PHP_VERSION
 update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
 
+# Get php-fpm and php binary path
+PHP_BIN_PATH=$(command -v php${PHP_VERSION} 2>/dev/null || true)
+PHP_FPM_PATH=$(command -v php-fpm${PHP_VERSION} 2>/dev/null || true)
+
+if [[ -z "$PHP_BIN_PATH" || -z "$PHP_FPM_PATH" ]]; then
+    echo "❌ Could not locate PHP or FPM binaries for version $PHP_VERSION"
+fi
+
 # Set MySQL root password
 echo "🔐 Configuring MySQL..."
 mysql -u root <<-EOF
@@ -209,4 +217,4 @@ cd $INSTALL_DIR/web
 chown -R www-data:www-data .
 /usr/bin/php artisan key:generate
 /usr/bin/php artisan migrate:fresh
-/usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT" "$KTRL_VERSION" "$PHP_VERSION"
+/usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT" "$KTRL_VERSION" "$PHP_VERSION" "$PHP_BIN_PATH" "$PHP_FPM_PATH"

@@ -20,7 +20,7 @@ class SetupPanelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'panel:setup {email} {user} {pass} {fqdn} {port} {ktrl_version} {php_version}';
+    protected $signature = 'panel:setup {email} {user} {pass} {fqdn} {port} {ktrl_version} {php_version} {php_bin_path} {php_fpm_path}';
 
     /**
      * The console command description.
@@ -42,6 +42,8 @@ class SetupPanelCommand extends Command
             $port = $this->argument('port');
             $ktrl_version = $this->argument('ktrl_version');
             $php_version = $this->argument('php_version');
+            $php_bin_path = $this->argument('php_bin_path');
+            $php_fpm_path = $this->argument('php_fpm_path');
 
             $user = User::create([
                 'name' => 'KTRL Admin',
@@ -71,8 +73,8 @@ class SetupPanelCommand extends Command
                 'version' => $php_version,
                 'installed' => true,
                 'default' => true,
-                'binary_path' => '',
-                'fpm_path' => '',
+                'binary_path' => $php_bin_path,
+                'fpm_path' => $php_fpm_path
             ]);
 
             $this->info("KontrolPanel settings was created successfully.");
