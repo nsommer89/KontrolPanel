@@ -42,7 +42,7 @@ for arg in "$@"; do
             CERTBOT_EMAIL="${arg#*=}"
             ;;
         --fqdn=*)
-            export FQDN="${arg#*=}"
+            FQDN="${arg#*=}"
             ;;
     esac
 done
@@ -114,6 +114,7 @@ else
 fi
 
 export CERTBOT_EMAIL
+export FQDN
 
 # Detect OS
 . /etc/os-release
