@@ -46,5 +46,5 @@ apt-get update -y && apt-get install -y --no-install-recommends curl ca-certific
 ### 🔹 Step 2: Install KontrolPanel
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/nsommer89/KontrolPanel/master/install.sh) --yes --email=you@example.com
+curl -fsSL https://raw.githubusercontent.com/nsommer89/KontrolPanel/master/install.sh | bash -s -- --yes --email=you@example.com --fqdn=server.example.com
 ```
