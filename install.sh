@@ -99,18 +99,18 @@ else
 fi
 
 # FQDN prompt (if not passed as argument)
-if [[ -z "$KTRL_FQDN" ]]; then
+if [[ -z "$FQDN" ]]; then
     while true; do
-        read -p "🌐 Enter the server's FQDN (e.g. panel.example.com): " KTRL_FQDN
-        if [[ "$KTRL_FQDN" =~ ^([a-zA-Z0-9][-a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$ ]]; then
-            echo "✅ FQDN accepted: $KTRL_FQDN"
+        read -p "🌐 Enter the server's FQDN (e.g. panel.example.com): " FQDN
+        if [[ "$FQDN" =~ ^([a-zA-Z0-9][-a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$ ]]; then
+            echo "✅ FQDN accepted: $FQDN"
             break
         else
             echo "❌ Invalid FQDN. Please try again (example: panel.example.com)."
         fi
     done
 else
-    echo "🌐 Using FQDN from argument: $KTRL_FQDN"
+    echo "🌐 Using FQDN from argument: $FQDN"
 fi
 
 export CERTBOT_EMAIL
