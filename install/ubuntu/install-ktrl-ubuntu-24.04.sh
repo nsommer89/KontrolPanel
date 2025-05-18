@@ -46,6 +46,7 @@ done
 echo "📦 Installing PHP and required extensions..."
 apt-get install -y php${PHP_VERSION} "${PACKAGES[@]}"
 
+
 echo "📦 Installing base packages..."
 apt-get install -y \
     software-properties-common \
@@ -64,7 +65,9 @@ apt-get install -y \
     nano \
     vim \
     mysql-server \
-    ufw
+    ufw \
+    proftpd-basic \
+    proftpd-mod-mysql
 
 echo "📃 Update ca-certificates"
 update-ca-certificates
@@ -141,6 +144,43 @@ mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, REFERENCES, INDEX, DROP,
 # Grant this user admin the FILE global privilege: (if enabled, reports will be archived faster thanks to the LOAD DATA INFILE feature)
 mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
 
+echo "📁 Creating MySQL database table for ProFTPd..."
+mysql -u admin -p"$KTRL_PASS" <<EOF
+USE ktrl_admin_db;
+CREATE TABLE IF NOT EXISTS ftp_users (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    username VARCHAR(32) NOT NULL,
+    password VARCHAR(64) NOT NULL,
+    homedir VARCHAR(255) NOT NULL,
+    shell VARCHAR(16) NOT NULL DEFAULT '/sbin/nologin',
+    uid INT(11) NOT NULL DEFAULT 33,
+    gid INT(11) NOT NULL DEFAULT 33,
+    PRIMARY KEY (id),
+    UNIQUE KEY username (username)
+);
+EOF
+
+echo "🛠️ Writing SQL config for ProFTPd..."
+cat > /etc/proftpd/sql.conf <<EOL
+<IfModule mod_sql.c>
+    SQLBackend              mysql
+    SQLEngine               on
+    SQLAuthenticate         users
+
+    SQLConnectInfo          ktrl_admin_db@localhost admin ${KTRL_PASS}
+    SQLUserInfo             ftp_users username password uid gid homedir shell
+</IfModule>
+EOL
+
+echo "⚙️ Updating main ProFTPd config..."
+if ! grep -q "Include /etc/proftpd/sql.conf" /etc/proftpd/proftpd.conf; then
+    echo "Include /etc/proftpd/sql.conf" >> /etc/proftpd/proftpd.conf
+fi
+
+echo "🔁 Restarting ProFTPd..."
+systemctl restart proftpd
+
+echo "✅ ProFTPd with MySQL authentication installed successfully."
 
 # TODO: Make it generate a new APP_KEY
 # Create webpanel laravel env file

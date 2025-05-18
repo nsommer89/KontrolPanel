@@ -41,10 +41,9 @@ class DevelopmentSeeder extends Seeder
 
         PhpVersion::create([
             'version' => '8.4',
-            'installed' => true,
             'default' => true,
-            'binary_path' => '',
-            'fpm_path' => '',
+            'binary_path' => '/usr/bin/php8.4',
+            'fpm_path' => '/usr/sbin/php-fpm8.4',
         ]);
 
         /** Create KTRLOptions */

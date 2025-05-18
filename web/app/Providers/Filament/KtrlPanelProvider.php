@@ -36,6 +36,8 @@ class KtrlPanelProvider extends PanelProvider
             ->brandLogo(asset('static/ktrl_logo_xl.png'))
             ->brandLogoHeight('4rem')
             // ->topNavigation()
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->sidebarCollapsibleOnDesktop()
             ->path('/')
             ->login(CustomLogin::class)

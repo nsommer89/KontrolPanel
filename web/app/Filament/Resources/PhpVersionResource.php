@@ -10,6 +10,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -48,6 +49,21 @@ class PhpVersionResource extends Resource
                             ->validationMessages([
                                 'unique' => 'PHP :attribute is already installed.',
                             ])
+                            ->hintActions([
+                                \Filament\Forms\Components\Actions\Action::make('validate_installation')
+                                    ->label('Validate Installation')
+                                    ->icon('heroicon-s-shield-check')
+                                    ->color('warning')
+                                    ->action(function (Set $set, Get $get) {
+                                        sleep(3);
+                                        $version = $get('version');
+                                        \Filament\Notifications\Notification::make()
+                                            ->title('PHP ' . $version . ' installation was validated')
+                                            ->success()
+                                            ->body('The validation of the PHP ' . $version . ' installation was successfull.')
+                                            ->send();
+                                    }),
+                            ])
                             ->helperText(__('This can\'t be changed. The PHP version can only be uninstalled.'))
                             ->required()
                             ->maxLength(255),
@@ -69,7 +85,7 @@ class PhpVersionResource extends Resource
                             })
                             ->maxLength(255),
                         Forms\Components\TextInput::make('fpm_path')
-                            ->hint('Expected to point to something like /etc/php/8.x/fpm')
+                            ->hint('Expected to point to something like /usr/sbin/php-fpm8.x')
                             ->rules(['nullable', 'string', 'starts_with:/etc/'])
                             ->disabled(function (Get $get) {
                                 return !$get('change_php_paths');
