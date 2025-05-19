@@ -58,6 +58,7 @@ apt-get install -y \
     apt-utils \
     curl \
     wget \
+    unzip \
     mysql-client \
     sudo \
     nginx \
@@ -67,7 +68,8 @@ apt-get install -y \
     mysql-server \
     ufw \
     proftpd-basic \
-    proftpd-mod-mysql
+    proftpd-mod-mysql \
+    phpmyadmin
 
 echo "📃 Update ca-certificates"
 update-ca-certificates
@@ -144,22 +146,33 @@ mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, REFERENCES, INDEX, DROP,
 # Grant this user admin the FILE global privilege: (if enabled, reports will be archived faster thanks to the LOAD DATA INFILE feature)
 mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
 
-echo "📁 Creating MySQL database table for ProFTPd..."
-mysql -u admin -p"$KTRL_PASS" <<EOF
-USE ktrl_admin_db;
-CREATE TABLE IF NOT EXISTS ftp_users (
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    username VARCHAR(32) NOT NULL,
-    password VARCHAR(64) NOT NULL,
-    homedir VARCHAR(255) NOT NULL,
-    shell VARCHAR(16) NOT NULL DEFAULT '/sbin/nologin',
-    uid INT(11) NOT NULL DEFAULT 33,
-    gid INT(11) NOT NULL DEFAULT 33,
-    PRIMARY KEY (id),
-    UNIQUE KEY username (username)
-);
-EOF
+# echo "📁 Creating MySQL database table for ProFTPd..."
+# mysql -u admin -p"$KTRL_PASS" <<EOF
+# USE ktrl_admin_db;
+# CREATE TABLE IF NOT EXISTS ftp_users (
+#     id INT(11) NOT NULL AUTO_INCREMENT,
+#     username VARCHAR(32) NOT NULL,
+#     password VARCHAR(64) NOT NULL,
+#     homedir VARCHAR(255) NOT NULL,
+#     shell VARCHAR(16) NOT NULL DEFAULT '/sbin/nologin',
+#     uid INT(11) NOT NULL DEFAULT 33,
+#     gid INT(11) NOT NULL DEFAULT 33,
+#     PRIMARY KEY (id),
+#     UNIQUE KEY username (username)
+# );
+# EOF
 
+# Install phpMyAdmin
+echo "📦 Installing phpMyAdmin..."
+wget -O /tmp/phpmyadmin.tar.gz https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+tar -xzf /tmp/phpmyadmin.tar.gz -C /usr/share/
+mv /usr/share/phpMyAdmin-* /usr/share/phpmyadmin
+chown -R www-data:www-data /usr/share/phpmyadmin
+chmod -R 755 /usr/share/phpmyadmin
+rm -f /tmp/phpmyadmin.tar.gz
+ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+
+# Create ProFTPd config
 echo "🛠️ Writing SQL config for ProFTPd..."
 cat > /etc/proftpd/sql.conf <<EOL
 <IfModule mod_sql.c>
@@ -176,9 +189,6 @@ echo "⚙️ Updating main ProFTPd config..."
 if ! grep -q "Include /etc/proftpd/sql.conf" /etc/proftpd/proftpd.conf; then
     echo "Include /etc/proftpd/sql.conf" >> /etc/proftpd/proftpd.conf
 fi
-
-echo "🔁 Starting ProFTPd..."
-service proftpd start
 
 # TODO: Make it generate a new APP_KEY
 # Create webpanel laravel env file
@@ -256,3 +266,6 @@ chown -R www-data:www-data .
 /usr/bin/php artisan key:generate
 /usr/bin/php artisan migrate:fresh
 /usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT" "$KTRL_VERSION" "$PHP_VERSION" "$PHP_BIN_PATH" "$PHP_FPM_PATH"
+
+echo "🔁 Starting ProFTPd..."
+service proftpd start

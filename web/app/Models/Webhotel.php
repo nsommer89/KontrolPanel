@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Webhotel extends Model
 {
     protected $fillable = [
+        'system_user',
         'name',
         'team_id',
         'php_version',
@@ -24,6 +25,11 @@ class Webhotel extends Model
     public function domains(): HasMany
     {
         return $this->hasMany(Domain::class);
+    }
+
+    public function ftpUsers(): HasMany
+    {
+        return $this->hasMany(FtpUser::class);
     }
 
     protected static function booted()

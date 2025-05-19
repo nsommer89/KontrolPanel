@@ -7,6 +7,8 @@ use App\Filament\Resources\WebhotelResource\RelationManagers;
 use App\Models\Webhotel;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,6 +29,9 @@ class WebhotelResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required(),
+                Forms\Components\TextInput::make('system_user')
+                    ->required(),
+
                 Forms\Components\Select::make('php_version')
                     ->label('PHP Version')
                     ->required()
@@ -44,10 +49,21 @@ class WebhotelResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('php_version'),
-                Tables\Columns\TextColumn::make('port'),
+                Tables\Columns\TextColumn::make('domains_count')
+                    ->badge()
+                    ->color(function ($state) {
+                        return $state > 0 ? 'success' : 'info';
+                    })
+                    ->counts('domains'),
+                Tables\Columns\TextColumn::make('php_version')
+                    ->badge()
+                    ->color('primary')
+                    ->label('PHP Version'),
+                Tables\Columns\TextColumn::make('port')
+                    ->badge()
+                    ->color('primary')
+                    ->label('PHP-FPM port'),
                 Tables\Columns\IconColumn::make('enabled')->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -74,7 +90,8 @@ class WebhotelResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\FtpUsersRelationManager::class,
+            RelationManagers\DomainsRelationManager::class,
         ];
     }
 

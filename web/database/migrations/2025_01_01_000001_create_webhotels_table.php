@@ -10,6 +10,7 @@ return new class extends Migration {
         Schema::create('webhotels', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('Unnamed');
+            $table->string('system_user')->unique()->nullable();
             $table->foreignId('team_id')->constrained()->onDelete('cascade');
             $table->string('php_version')->default('8.4');
             $table->unsignedInteger('port')->unique();
