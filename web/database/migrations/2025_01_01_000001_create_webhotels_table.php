@@ -11,6 +11,8 @@ return new class extends Migration {
             $table->id();
             $table->string('name')->default('Unnamed');
             $table->string('system_user')->unique()->nullable();
+            $table->string('system_user_uid')->unique()->nullable();
+            $table->string('system_user_gid')->unique()->nullable();
             $table->foreignId('team_id')->constrained()->onDelete('cascade');
             $table->string('php_version')->default('8.4');
             $table->unsignedInteger('port')->unique();

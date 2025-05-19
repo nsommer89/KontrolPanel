@@ -55,4 +55,16 @@ class KTRLOptionsHelper
     public function getPMAPort() : int {
         return $this->options->pma_port;
     }
+
+    public function getAdminUid() {
+        return $this->options->admin_uid;
+    }
+
+    public function getAdminGid() {
+        return $this->options->admin_gid;
+    }
+
+    public function getFQDN() : string {
+        return $this->options->fqdn;
+    }
 }

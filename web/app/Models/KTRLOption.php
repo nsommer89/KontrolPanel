@@ -19,6 +19,8 @@ class KTRLOption extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'admin_uid',
+        'admin_gid',
         'fqdn',
         'port',
         'ktrl_version',

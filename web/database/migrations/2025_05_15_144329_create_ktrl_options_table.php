@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('ktrl_options', function (Blueprint $table) {
             $table->id();
+            $table->integer('admin_uid');
+            $table->integer('admin_gid');
             $table->string('fqdn');
             $table->integer('port');
             $table->string('ktrl_version');

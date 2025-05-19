@@ -3,7 +3,7 @@
 set -e
 
 # =========================
-# KontrolPanel Installation (Remote Bootstrap)
+# KontrolPanel Installation Bootstrap
 # =========================
 
 # TODO: Remove the code below - just to ensure that i don't by failure do run it on my own machine 💀
@@ -21,7 +21,7 @@ if [ -f "/etc/kontrolpanel.installed" ]; then
 fi
 
 # Timezone
-export TZ=Europe/Copenhagen
+export TZ=UTC
 
 # GitHub source
 export REPO_BASE_URL="https://raw.githubusercontent.com/nsommer89/KontrolPanel/master/install"
@@ -155,7 +155,12 @@ bash ./install-ktrl.sh
 # Mark as installed
 touch /etc/kontrolpanel.installed
 
+# Create user
+echo "👤 Creating default admin user..."
+bash $INSTALL_DIR/install/ubuntu/tasks/adduser.sh --username=admin --password="$KTRL_PASS"
+
 # Final message
+# TODO: Uncomment the line below to clear the screen
 #clear
 echo ""
 echo "=============================================="

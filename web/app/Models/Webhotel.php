@@ -10,6 +10,8 @@ class Webhotel extends Model
 {
     protected $fillable = [
         'system_user',
+        'system_user_uid',
+        'system_user_gid',
         'name',
         'team_id',
         'php_version',

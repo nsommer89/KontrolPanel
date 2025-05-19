@@ -20,7 +20,7 @@ class SetupPanelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'panel:setup {email} {user} {pass} {fqdn} {port} {ktrl_version} {php_version} {php_bin_path} {php_fpm_path}';
+    protected $signature = 'panel:setup {email} {user} {pass} {fqdn} {port} {ktrl_version} {php_version} {php_bin_path} {php_fpm_path} {system_user_uid} {system_user_gid}';
 
     /**
      * The console command description.
@@ -44,6 +44,8 @@ class SetupPanelCommand extends Command
             $php_version = $this->argument('php_version');
             $php_bin_path = $this->argument('php_bin_path');
             $php_fpm_path = $this->argument('php_fpm_path');
+            $system_user_uid = $this->argument('system_user_uid');
+            $system_user_gid = $this->argument('system_user_gid');
 
             $user = User::create([
                 'name' => 'KTRL Admin',
@@ -66,8 +68,9 @@ class SetupPanelCommand extends Command
                 'port' => $port,
                 'ktrl_version' => $ktrl_version,
                 'pma_port' => 8081,
+                'admin_uid' => $system_user_uid,
+                'admin_gid' => $system_user_gid,
             ]);
-
 
             // Create the currently installed PHP version
             PhpVersion::create([
