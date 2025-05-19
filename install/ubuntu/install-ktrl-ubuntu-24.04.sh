@@ -108,6 +108,7 @@ echo "📦 Installing phpMyAdmin..."
 wget -O /tmp/phpmyadmin.tar.gz https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
 tar -xzf /tmp/phpmyadmin.tar.gz -C /usr/share/
 mv /usr/share/phpMyAdmin-* /usr/share/phpmyadmin
+cp $INSTALL_DIR/install/ubuntu/phpmyadmin/config.inc.php /usr/share/phpmyadmin/config.inc.php
 chown -R www-data:www-data /usr/share/phpmyadmin
 chmod -R 755 /usr/share/phpmyadmin
 rm -f /tmp/phpmyadmin.tar.gz
