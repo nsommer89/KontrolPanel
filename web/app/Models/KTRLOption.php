@@ -22,5 +22,6 @@ class KTRLOption extends Model
         'fqdn',
         'port',
         'ktrl_version',
+        'pma_port',
     ];
 }

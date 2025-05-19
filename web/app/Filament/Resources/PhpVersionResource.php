@@ -23,7 +23,7 @@ class PhpVersionResource extends Resource
 
     protected static ?string $navigationLabel = 'PHP Versions';
 
-    protected static ?string $navigationIcon = 'heroicon-o-code-bracket';
+    protected static ?string $navigationIcon = 'icon-php';
 
     protected static bool $isScopedToTenant = false;
 

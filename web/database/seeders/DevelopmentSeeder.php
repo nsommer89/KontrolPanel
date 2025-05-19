@@ -50,7 +50,8 @@ class DevelopmentSeeder extends Seeder
         KTRLOption::create([
             'fqdn'         => $fqdn,
             'port'         => $port,
-            'ktrl_version' => 'dev'
+            'ktrl_version' => 'dev',
+            'pma_port' => '8081',
         ]);
     }
 }

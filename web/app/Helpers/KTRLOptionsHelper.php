@@ -51,4 +51,8 @@ class KTRLOptionsHelper
     public function getKTRLVersion() : string {
         return $this->options->ktrl_version;
     }
+
+    public function getPMAPort() : int {
+        return $this->options->pma_port;
+    }
 }

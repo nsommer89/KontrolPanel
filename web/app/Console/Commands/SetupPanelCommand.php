@@ -65,6 +65,7 @@ class SetupPanelCommand extends Command
                 'fqdn' => $fqdn,
                 'port' => $port,
                 'ktrl_version' => $ktrl_version,
+                'pma_port' => 8081,
             ]);
 
 

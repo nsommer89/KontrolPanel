@@ -6,6 +6,8 @@ use App\Filament\Auth\CustomLogin;
 use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Filament\Widgets\KontrolPanelInfoWidget;
+use App\Helpers\KTRLOptionsHelper;
+use App\Models\KTRLOption;
 use App\Models\Team;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -24,6 +26,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationGroup;
 use Filament\FontProviders\GoogleFontProvider;
+use Filament\Navigation\NavigationItem;
 
 class KtrlPanelProvider extends PanelProvider
 {
@@ -54,12 +57,27 @@ class KtrlPanelProvider extends PanelProvider
                 'danger'  => '#EF4444',   // red-500
             ])
             ->tenant(Team::class)
+            ->navigationItems([
+                NavigationItem::make('phpMyAdmin')
+                    ->url(function () {
+                        $host = request()->getHost();
+                        $pma_port = KTRLOptionsHelper::getInstance()->getPMAPort();
+                        return "http://{$host}:{$pma_port}";
+                    }, shouldOpenInNewTab: true)
+                    ->icon('icon-pma')
+                    ->group('Shortcuts')
+                    ->sort(3),
+            ])
             ->navigationGroups([
                 NavigationGroup::make('Webhosting')
                     ->label(fn(): string => __('Webhosting'))
                     ->collapsible(false),
                 NavigationGroup::make('System')
                     ->label(fn(): string => __('System'))
+                    ->collapsible(false)
+                    ->collapsed(),
+                NavigationGroup::make('Shortcuts')
+                    ->label(fn(): string => __('Shortcuts'))
                     ->collapsible(false)
                     ->collapsed(),
             ])

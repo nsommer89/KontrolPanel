@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('fqdn');
             $table->integer('port');
             $table->string('ktrl_version');
+            $table->integer('pma_port')->default(8081);
             $table->timestamps();
         });
     }
