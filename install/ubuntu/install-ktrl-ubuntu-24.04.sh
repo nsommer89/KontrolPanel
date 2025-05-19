@@ -115,20 +115,9 @@ rm -f /tmp/phpmyadmin.tar.gz
 ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 
 # Move phpmyadmin.conf to nginx conf.d
-echo "📦 Configuring phpMyAdmin for Nginx..."
+echo "📦 Configuring phpMyAdmin..."
 cp $INSTALL_DIR/install/ubuntu/nginx/phpMyAdmin.conf /etc/nginx/conf.d/phpMyAdmin.conf
-
-cat > /usr/share/phpmyadmin/config.inc.php <<EOL
-<?php
-$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; /* 32 chars long */
-$i = 0;
-$i++;
-\$cfg['Servers'][\$i]['auth_type'] = 'cookie';
-\$cfg['Servers'][\$i]['host'] = '127.0.0.1';
-\$cfg['Servers'][\$i]['AllowNoPassword'] = false;
-\$cfg['Servers'][\$i]['compress'] = false;
-\$cfg['Servers'][\$i]['noprefix'] = false;
-EOL
+sed -i "s/\\\$dbserver='localhost';/\\\$dbserver='127.0.0.1';/" /etc/phpmyadmin/config-db.php
 
 # Cleanup
 echo "🧹 Clean up...";
