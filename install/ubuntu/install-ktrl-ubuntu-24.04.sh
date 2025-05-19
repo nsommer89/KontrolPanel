@@ -78,6 +78,7 @@ if [ "$enableUFW" != "${enableUFW#[Yy]}" ] ;then
     ufw allow 80
     ufw allow 443
     ufw allow $KTRL_PORT
+    ufw allow 8081
 fi
 
 # TODO: Notify the user that they need to agree to Certbot terms of service
