@@ -104,6 +104,20 @@ unlink /etc/nginx/sites-enabled/default
 cp $INSTALL_DIR/install/ubuntu/php-fpm/ktrl.www.conf /etc/php/$PHP_VERSION/fpm/pool.d/ktrl.www.conf
 cp $INSTALL_DIR/install/ubuntu/nginx/ktrl.conf /etc/nginx/conf.d/ktrl.conf
 
+# Install phpMyAdmin
+echo "📦 Installing phpMyAdmin..."
+wget -O /tmp/phpmyadmin.tar.gz https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+tar -xzf /tmp/phpmyadmin.tar.gz -C /usr/share/
+mv /usr/share/phpMyAdmin-* /usr/share/phpmyadmin
+chown -R www-data:www-data /usr/share/phpmyadmin
+chmod -R 755 /usr/share/phpmyadmin
+rm -f /tmp/phpmyadmin.tar.gz
+ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+
+# Move phpmyadmin.conf to nginx conf.d
+echo "📦 Configuring phpMyAdmin for Nginx..."
+cp $INSTALL_DIR/install/ubuntu/nginx/phpmyadmin.conf /etc/nginx/conf.d/phpmyadmin.conf
+
 # Cleanup
 echo "🧹 Clean up...";
 apt autoremove
@@ -161,16 +175,6 @@ mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
 #     UNIQUE KEY username (username)
 # );
 # EOF
-
-# Install phpMyAdmin
-echo "📦 Installing phpMyAdmin..."
-wget -O /tmp/phpmyadmin.tar.gz https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
-tar -xzf /tmp/phpmyadmin.tar.gz -C /usr/share/
-mv /usr/share/phpMyAdmin-* /usr/share/phpmyadmin
-chown -R www-data:www-data /usr/share/phpmyadmin
-chmod -R 755 /usr/share/phpmyadmin
-rm -f /tmp/phpmyadmin.tar.gz
-ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 
 # Create ProFTPd config
 echo "🛠️ Writing SQL config for ProFTPd..."
