@@ -118,6 +118,18 @@ ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 echo "📦 Configuring phpMyAdmin for Nginx..."
 cp $INSTALL_DIR/install/ubuntu/nginx/phpMyAdmin.conf /etc/nginx/conf.d/phpMyAdmin.conf
 
+cat > /usr/share/phpmyadmin/config.inc.php <<EOL
+<?php
+$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; /* 32 chars long */
+$i = 0;
+$i++;
+\$cfg['Servers'][\$i]['auth_type'] = 'cookie';
+\$cfg['Servers'][\$i]['host'] = '127.0.0.1';
+\$cfg['Servers'][\$i]['AllowNoPassword'] = false;
+\$cfg['Servers'][\$i]['compress'] = false;
+\$cfg['Servers'][\$i]['noprefix'] = false;
+EOL
+
 # Cleanup
 echo "🧹 Clean up...";
 apt autoremove
