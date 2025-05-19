@@ -116,7 +116,7 @@ ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 
 # Move phpmyadmin.conf to nginx conf.d
 echo "📦 Configuring phpMyAdmin for Nginx..."
-cp $INSTALL_DIR/install/ubuntu/nginx/phpmyadmin.conf /etc/nginx/conf.d/phpmyadmin.conf
+cp $INSTALL_DIR/install/ubuntu/nginx/phpMyAdmin.conf /etc/nginx/conf.d/phpMyAdmin.conf
 
 # Cleanup
 echo "🧹 Clean up...";
