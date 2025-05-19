@@ -292,12 +292,16 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 VITE_APP_NAME="\${APP_NAME}"
 EOF
 
+# Create default admin user
+echo "👤 Creating default admin user..."
+bash $INSTALL_DIR/install/ubuntu/tasks/adduser.sh --username=admin --password="$KTRL_PASS"
+
 cd $INSTALL_DIR/web
 /usr/local/bin/composer install
 chown -R www-data:www-data .
 /usr/bin/php artisan key:generate
 /usr/bin/php artisan migrate:fresh
-/usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT" "$KTRL_VERSION" "$PHP_VERSION" "$PHP_BIN_PATH" "$PHP_FPM_PATH"
+/usr/bin/php artisan panel:setup "$CERTBOT_EMAIL" "admin" "$KTRL_PASS" "$FQDN" "$KTRL_PORT" "$KTRL_VERSION" "$PHP_VERSION" "$PHP_BIN_PATH" "$PHP_FPM_PATH" "$USER_UID" "$USER_GID"
 
 echo "🔁 Starting ProFTPd..."
 service proftpd start

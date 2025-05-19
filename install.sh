@@ -155,10 +155,6 @@ bash ./install-ktrl.sh
 # Mark as installed
 touch /etc/kontrolpanel.installed
 
-# Create user
-echo "👤 Creating default admin user..."
-bash $INSTALL_DIR/install/ubuntu/tasks/adduser.sh --username=admin --password="$KTRL_PASS"
-
 # Final message
 # TODO: Uncomment the line below to clear the screen
 #clear
