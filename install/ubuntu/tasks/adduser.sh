@@ -47,3 +47,5 @@ chmod 755 /home/$USERNAME
 # Export the user UID and GID
 export USER_UID
 export USER_GID
+
+echo "👤 User $USERNAME created with UID $USER_UID and GID $USER_GID."

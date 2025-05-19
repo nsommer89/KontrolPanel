@@ -294,7 +294,7 @@ EOF
 
 # Create default admin user
 echo "👤 Creating default admin user..."
-bash $INSTALL_DIR/install/ubuntu/tasks/adduser.sh --username=admin --password="$KTRL_PASS"
+. $INSTALL_DIR/install/ubuntu/tasks/adduser.sh --username=admin --password="$KTRL_PASS"
 
 cd $INSTALL_DIR/web
 /usr/local/bin/composer install
