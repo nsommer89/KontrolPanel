@@ -178,6 +178,10 @@ mysql -e "GRANT FILE ON *.* TO 'admin'@'localhost';"
 # );
 # EOF
 
+# Copy ProFTPd config
+echo "📁 Configuring ProFTPd..."
+cp $INSTALL_DIR/install/ubuntu/proftpd/proftpd.conf /etc/proftpd/proftpd.conf
+
 # Create ProFTPd config
 echo "🛠️ Writing SQL config for ProFTPd..."
 cat > /etc/proftpd/sql.conf <<EOL
@@ -185,16 +189,38 @@ cat > /etc/proftpd/sql.conf <<EOL
     SQLBackend              mysql
     SQLEngine               on
     SQLAuthenticate         users
+    SQLAuthTypes            Plaintext
 
-    SQLConnectInfo          ktrl_admin_db@localhost admin ${KTRL_PASS}
+    SQLConnectInfo          ktrl_admin_db@127.0.0.1 admin ${KTRL_PASS}
     SQLUserInfo             ftp_users username password uid gid homedir shell
 </IfModule>
 EOL
 
-echo "⚙️ Updating main ProFTPd config..."
-if ! grep -q "Include /etc/proftpd/sql.conf" /etc/proftpd/proftpd.conf; then
-    echo "Include /etc/proftpd/sql.conf" >> /etc/proftpd/proftpd.conf
+# echo "⚙️ Enabling SQL authentication for ProFTPd..."
+# Uncomment the include if it's commented
+# sed -i 's|^#\s*\(Include\s\+/etc/proftpd/sql.conf\)|\1|' /etc/proftpd/proftpd.conf
+# Add the include if missing entirely
+# if ! grep -q "^[[:space:]]*Include[[:space:]]*/etc/proftpd/sql.conf" /etc/proftpd/proftpd.conf; then
+#     echo "Include /etc/proftpd/sql.conf" >> /etc/proftpd/proftpd.conf
+# fi
+
+echo "⚙️ Enabling ProFTPd SQL modules..."
+# Ensure mod_sql and mod_sql_mysql are uncommented in modules.conf
+sed -i 's|^#\s*LoadModule\s\+mod_sql.c|LoadModule mod_sql.c|' /etc/proftpd/modules.conf
+sed -i 's|^#\s*LoadModule\s\+mod_sql_mysql.c|LoadModule mod_sql_mysql.c|' /etc/proftpd/modules.conf
+
+echo "🔐 Ensuring ProFTPd shell is valid..."
+# Ensure /sbin/nologin is allowed
+if ! grep -Fxq "/sbin/nologin" /etc/shells; then
+    echo "/sbin/nologin" >> /etc/shells
 fi
+# Ensure /usr/sbin/nologin is allowed (some systems use this path)
+if ! grep -Fxq "/usr/sbin/nologin" /etc/shells; then
+    echo "/usr/sbin/nologin" >> /etc/shells
+fi
+
+# Uncomment 'DefaultRoot ~' if it's present and commented
+sed -i 's|^#\s*DefaultRoot\s\+~|DefaultRoot ~|' /etc/proftpd/proftpd.conf
 
 # TODO: Make it generate a new APP_KEY
 # Create webpanel laravel env file

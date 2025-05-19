@@ -33,7 +33,7 @@ It is built on **Laravel + Filament**, and currently supports **Ubuntu** and **D
 > Alternatively, you can try it inside a Docker container:
 
 ```bash
-docker run -p 80:80 -p 443:443 -p 22:22 -p 8200:8200 -p 8081:8081 -a stdin -a stdout -i -t ubuntu:24.04 /bin/bash
+docker run -p 80:80 -p 443:443 -p 22:22 -p 21:21 -p 8200:8200 -p 8081:8081 -a stdin -a stdout -i -t ubuntu:24.04 /bin/bash
 ```
 
 ### 🔹 Step 1: Prepare the system (required for Debian/Ubuntu)
