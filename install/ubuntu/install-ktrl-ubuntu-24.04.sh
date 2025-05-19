@@ -68,8 +68,7 @@ apt-get install -y \
     mysql-server \
     ufw \
     proftpd-basic \
-    proftpd-mod-mysql \
-    phpmyadmin
+    proftpd-mod-mysql
 
 echo "📃 Update ca-certificates"
 update-ca-certificates
