@@ -68,8 +68,8 @@ class SetupPanelCommand extends Command
                 'port' => $port,
                 'ktrl_version' => $ktrl_version,
                 'pma_port' => 8081,
-                'admin_uid' => $system_user_uid,
-                'admin_gid' => $system_user_gid,
+                'admin_uid' => (int) $system_user_uid,
+                'admin_gid' => (int) $system_user_gid,
             ]);
 
             // Create the currently installed PHP version
